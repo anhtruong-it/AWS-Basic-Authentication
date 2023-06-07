@@ -6,6 +6,8 @@ import ConfirmSignUp from './ConfirmSignUp';
 import ForgotPassword from './ForgotPassword';
 import ForgotPasswordSubmit from './ForgotPasswordSubmit';
 
+console.log("from appear")
+
 const initialFormState = {
     username: '', password: '', email: '', confirmationCode: ''
 }
@@ -20,10 +22,10 @@ async function signIn({ username, password }, setUser) {
     }
 }
 
-async function signUp({ username, password, email}, updateFormType) {
+async function signUp({ username, password, email }, updateFormType) {
     try {
         await Auth.signUp({
-            username, password, attributes: {email}
+            username, password, attributes: { email }
         })
         console.log("sign up success")
         updateFormType("confirmSignUp")
@@ -32,7 +34,7 @@ async function signUp({ username, password, email}, updateFormType) {
     }
 }
 
-async function confirmSignUp({ username, confirmationCode}, updateFormType) {
+async function confirmSignUp({ username, confirmationCode }, updateFormType) {
     try {
         await Auth.confirmSignUp(username, confirmationCode)
         updateFormType("signIn")
@@ -41,7 +43,7 @@ async function confirmSignUp({ username, confirmationCode}, updateFormType) {
     }
 }
 
-async function forgotPasswordSubmit({ username, confirmationCode, password}, updateFormType) {
+async function forgotPasswordSubmit({ username, confirmationCode, password }, updateFormType) {
     try {
         await Auth.forgotPasswordSubmit(username, confirmationCode, password)
         updateFormType("signIn")
@@ -60,15 +62,90 @@ async function forgotPassword({ username }, updateFormType) {
 }
 
 function Form(props) {
-    const [formType, updateFormType] = useState('SignIn');
+    const [formType, updateFormType] = useState('signIn');
     const [formState, updateFormState] = useState(initialFormState);
-    function renderForm() {
-        return (
-            <div>
-                {renderForm()}
-            </div>
-        )
+    function updateForm(event) {
+        const newFormState = {
+            ...formState, [event.target.name]: event.target.value
+        }
+        updateFormState(newFormState)
     }
+    function renderForm() {
+        console.log("renderform", formType)
+        switch (formType) {
+            case 'signUp':
+                return (
+                    <SignUp
+                        signUp={() => signUp(formState, updateFormType)}
+                        updateFormState={e => updateForm(e)}
+                    />
+                )
+            case 'confirmSignUp':
+                return (
+                    <ConfirmSignUp
+                        confirmSignUp={() => confirmSignUp(formState, updateFormType)}
+                        updateFormState={e => updateForm(e)}
+                    />
+                )
+            case 'signIn':
+                return (
+                    <SignIn
+                        signIn={() => signIn(formState, props.setUser)}
+                        updateFormState={e => updateForm(e)}
+                    />
+                )
+            case 'forgotPassword':
+                return (
+                    <ForgotPassword
+                        forgotPassword={() => forgotPassword(formState, updateFormType)}
+                        updateFormState={e => updateForm(e)}
+                    />
+                )
+            case 'forgotPasswordSubmit':
+                return (
+                    <ForgotPasswordSubmit
+                        forgotPasswordSubmit={
+                            () => forgotPasswordSubmit(formState, updateFormType)}
+                        updateFormState={e => updateForm(e)}
+                    />
+                )
+            default:
+                return null
+        }
+    }
+    return (
+        <div>
+            {renderForm()}
+            {
+                formType === 'signUp' && (
+                    <p style={styles.toggleForm}>
+                        Aleady have an account? <span
+                            style={styles.anchor}
+                            onClick={() => updateFormType('signIn')}
+                        >Sign In</span>
+                    </p>
+                )
+            }
+            {
+                formType === 'signIn' && (
+                    <>
+                        <p style={styles.toggleForm}>
+                            Need an account? <span
+                                style={styles.anchor}
+                                onClick={() => updateFormType('signUp')}
+                            >Sign Up</span>
+                        </p>
+                        <p style={{ ...styles.toggleForm, ...styles.resetPassword }}>
+                            Forget your pasword? <span
+                                style={styles.anchor}
+                                onClick={() => updateFormType('forgotPassword')}
+                            >Reset Password</span>
+                        </p>
+                    </>
+                )
+            }
+        </div>
+    )
 }
 
 const styles = {

@@ -1,5 +1,4 @@
 import React from 'react';
-import App from './App';
 import './index.css';
 import Router from './Router';
 import 'antd/dist/reset.css';

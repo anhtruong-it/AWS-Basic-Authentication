@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { HashRouter, Routes, Route } from "react-router-dom";
-import '@aws-amplify/ui-react/styles.css';
+//import '@aws-amplify/ui-react/styles.css';
 import Nav from "./Nav";
 import Public from "./Public";
 import Protected from "./Protected";
 import Profile from "./Profile";
-import Container from "./Container";
 
 const Router = () => {
     const [current, setCurrent] = useState('home')

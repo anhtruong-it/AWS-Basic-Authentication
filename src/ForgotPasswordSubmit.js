@@ -6,8 +6,15 @@ function ForgotPasswordSubmit(props) {
     return (
         <div style={styles.container}>
             <input
-                name="password"
-                type="password"
+                name='confirmationCode'
+                placeholder='Confirmation code'
+                onChange={e => { e.persist(); props.updateFormState(e) }}
+                style={styles.input}
+            />
+            <input
+                name='password'
+                placeholder='New password'
+                type='password'
                 onChange={e => { e.persist(); props.updateFormState(e) }}
                 style={styles.input}
             />
@@ -16,4 +23,5 @@ function ForgotPasswordSubmit(props) {
     )
 }
 
-export default ForgotPasswordSubmit
+
+    export default ForgotPasswordSubmit

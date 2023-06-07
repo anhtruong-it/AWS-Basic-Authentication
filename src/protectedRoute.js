@@ -3,6 +3,7 @@ import { Auth } from 'aws-amplify';
 import { useNavigate } from 'react-router-dom';
 
 const protectedRoute = (Comp, route = '/profile') => (props) => {
+    console.log("protec auth")
     const navigate = useNavigate();
     async function checkAuthState() {
         try {
