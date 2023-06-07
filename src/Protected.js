@@ -3,17 +3,11 @@ import { Auth } from 'aws-amplify';
 import Container from "./Container";
 import '@aws-amplify/ui-react/styles.css';
 import { useNavigate } from 'react-router-dom';
+import protectedRoute from "./protectedRoute";
+
 
 function Protected() {
     console.log("pro")
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    Auth.currentAuthenticatedUser()
-      .catch(() => {
-        navigate('/profile');
-      });
-  }, []);
     return (
         <Container>
             <h1>Protected</h1>
@@ -21,4 +15,4 @@ function Protected() {
     );
 }
 
-export default Protected
+export default protectedRoute(Protected)
